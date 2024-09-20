@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "us-east-1"  
+  region  = "us-east-1"
+  profile = "pos"
 }
 
 resource "aws_iam_role" "eks_role" {
@@ -24,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "eks_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_eks_cluster" "dog-development" {
+resource "aws_eks_cluster" "dog_development" {
   name     = "dog-eks-cluster"
   role_arn = aws_iam_role.eks_role.arn
 
@@ -66,10 +67,10 @@ resource "aws_iam_role_policy_attachment" "registry_policy" {
 }
 
 resource "aws_eks_node_group" "dog_node_group" {
-  cluster_name    = aws_eks_cluster.dog-development.name
+  cluster_name    = aws_eks_cluster.dog_development.name
   node_group_name = "dog-node-group"
   node_role_arn   = aws_iam_role.node_group_role.arn
-  subnet_ids = ["subnet-0f7929d1b271ee353", "subnet-0e181418367a35ba8", "subnet-0814a612113aa40ec", "subnet-0133e56396d41f222"]
+  subnet_ids      = ["subnet-0f7929d1b271ee353", "subnet-0e181418367a35ba8", "subnet-0814a612113aa40ec", "subnet-0133e56396d41f222"]
 
   scaling_config {
     desired_size = 1
@@ -78,15 +79,15 @@ resource "aws_eks_node_group" "dog_node_group" {
   }
 
   instance_types = ["t3.small"]
-  capacity_type = "SPOT"
+  capacity_type  = "SPOT"
 }
 
 provider "kubernetes" {
-  host                   = aws_eks_cluster.dog_eks_cluster.endpoint
-  cluster_ca_certificate = base64decode(aws_eks_cluster.dog_eks_cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.dog_eks_cluster.token
+  host                   = aws_eks_cluster.dog_development.endpoint
+  cluster_ca_certificate = base64decode(aws_eks_cluster.dog_development.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.dog_development.token
 }
 
-data "aws_eks_cluster_auth" "dog_eks_cluster" {
-  name = aws_eks_cluster.dog_eks_cluster.name
+data "aws_eks_cluster_auth" "dog_development" {
+  name = aws_eks_cluster.dog_development.name
 }
