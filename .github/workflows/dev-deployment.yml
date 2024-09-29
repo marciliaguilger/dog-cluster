@@ -25,6 +25,15 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
+        
+    - name: Set Terraform environment variables
+      run: |
+        echo "TF_VAR_ACCOUNT_ID=${{ secrets.TF_VAR_ACCOUNT_ID }}" >> $GITHUB_ENV
+        echo "TF_VAR_EKS_CLUSTER_ROLE_ARN=${{ secrets.TF_VAR_EKS_CLUSTER_ROLE_ARN }}" >> $GITHUB_ENV   
+        echo "TF_VAR_EKS_NODE_GROUP_ROLE_ARN=${{ secrets.TF_VAR_EKS_NODE_GROUP_ROLE_ARN }}" >> $GITHUB_ENV   
+        echo "TF_VAR_SECRETS_MANAGER_ROLE_ARN=${{ secrets.TF_VAR_SECRETS_MANAGER_ROLE_ARN }}" >> $GITHUB_ENV   
+        echo "TF_VAR_SUBNET_IDS=${{ secrets.TF_VAR_SUBNET_IDS }}" >> $GITHUB_ENV   
+        
 
     - name: Terraform Init
       run: terraform init
@@ -65,6 +74,14 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
+        
+    - name: Set Terraform environment variables
+      run: |
+        echo "TF_VAR_ACCOUNT_ID=${{ secrets.TF_VAR_ACCOUNT_ID }}" >> $GITHUB_ENV
+        echo "TF_VAR_EKS_CLUSTER_ROLE_ARN=${{ secrets.TF_VAR_EKS_CLUSTER_ROLE_ARN }}" >> $GITHUB_ENV   
+        echo "TF_VAR_EKS_NODE_GROUP_ROLE_ARN=${{ secrets.TF_VAR_EKS_NODE_GROUP_ROLE_ARN }}" >> $GITHUB_ENV   
+        echo "TF_VAR_SECRETS_MANAGER_ROLE_ARN=${{ secrets.TF_VAR_SECRETS_MANAGER_ROLE_ARN }}" >> $GITHUB_ENV   
+        echo "TF_VAR_SUBNET_IDS=${{ secrets.TF_VAR_SUBNET_IDS }}" >> $GITHUB_ENV           
 
     - name: Terraform Apply
       run: terraform apply -auto-approve plan.tfplan
